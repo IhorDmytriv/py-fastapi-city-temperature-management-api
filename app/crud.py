@@ -4,7 +4,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from db.models import City
-from schemas import CityCreateSchema
+from schemas import (
+    CityCreateSchema,
+    CityUpdateSchema
+)
 
 
 def check_city_by_name_in_db(db: Session, city_name: str) -> City | None:
@@ -29,3 +32,14 @@ def get_all_cities(db: Session) -> Sequence[City]:
 
 def get_city_by_id(db: Session, city_id: int) -> City | None:
     return db.execute(select(City).where(City.id == city_id)).scalar_one_or_none()
+
+
+def update_city(db: Session, db_city: City, city_update: CityUpdateSchema):
+    update_data = city_update.model_dump(exclude_unset=True, exclude_none=True)
+
+    for key, value in update_data.items():
+        setattr(db_city, key, value)
+
+    db.commit()
+    db.refresh(db_city)
+    return db_city

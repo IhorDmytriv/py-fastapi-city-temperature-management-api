@@ -12,6 +12,11 @@ class CityCreateSchema(CityBaseSchema):
     pass
 
 
+class CityUpdateSchema(CityBaseSchema):
+    name: Optional[str] = None
+    additional_info: Optional[str] = None
+
+
 class CityRetrieveSchema(CityBaseSchema):
     id: int
 

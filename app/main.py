@@ -7,12 +7,14 @@ from app.crud import (
     create_city,
     check_city_by_name_in_db,
     get_all_cities,
-    get_city_by_id
+    get_city_by_id,
+    update_city
 )
 from app.db.database import get_db
 from app.schemas import (
     CityCreateSchema,
-    CityRetrieveSchema
+    CityRetrieveSchema,
+    CityUpdateSchema
 )
 
 app = FastAPI()
@@ -41,3 +43,12 @@ def retrieve_city(city_id: int, db: Session = Depends(get_db)):
     if not city:
         raise HTTPException(status_code=404, detail="City not found")
     return city
+
+
+@app.put("/cities/{city_id}", response_model=CityRetrieveSchema)
+def edit_city(city_id: int, city_update: CityUpdateSchema, db: Session = Depends(get_db)):
+    db_city = get_city_by_id(db=db, city_id=city_id)
+    if not db_city:
+        raise HTTPException(status_code=404, detail="City not found")
+
+    return update_city(db=db, db_city=db_city, city_update=city_update)
