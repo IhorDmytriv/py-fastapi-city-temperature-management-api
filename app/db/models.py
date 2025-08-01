@@ -1,7 +1,6 @@
-from tokenize import String
 
-from sqlalchemy import Column, Integer
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 
 
 class Base(DeclarativeBase):
@@ -11,6 +10,11 @@ class Base(DeclarativeBase):
 class City(Base):
     __tablename__ = "cities"
 
-    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    name = Column(String(255))
-    additional_info = Column(String(255), nullable=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+        index=True
+    )
+    name: Mapped[str] = mapped_column(String(255))
+    additional_info: Mapped[str] = mapped_column(String(255), nullable=True)
