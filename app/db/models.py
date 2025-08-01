@@ -17,4 +17,4 @@ class City(Base):
         index=True
     )
     name: Mapped[str] = mapped_column(String(255))
-    additional_info: Mapped[str] = mapped_column(String(255), nullable=True)
+    additional_info: Mapped[str | None] = mapped_column(String(255), nullable=True)
