@@ -1,3 +1,6 @@
+from typing import List, Sequence
+
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from db.models import City
@@ -18,3 +21,7 @@ def create_city(db: Session, city: CityCreateSchema) -> City:
     db.refresh(db_city)
 
     return db_city
+
+
+def get_all_cities(db: Session) -> Sequence[City]:
+    return db.execute(select(City)).scalars().all()

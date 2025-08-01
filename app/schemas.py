@@ -12,7 +12,7 @@ class CityCreateSchema(CityBaseSchema):
     pass
 
 
-class CityListSchema(CityBaseSchema):
+class CityRetrieveSchema(CityBaseSchema):
     id: int
 
     class Config:
