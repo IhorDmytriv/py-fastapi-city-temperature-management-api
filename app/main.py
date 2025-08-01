@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 from app.crud import (
     create_city,
     check_city_by_name_in_db,
-    get_all_cities
+    get_all_cities,
+    get_city_by_id
 )
 from app.db.database import get_db
 from app.schemas import (
@@ -32,3 +33,11 @@ def list_cities(
     if not cities:
         raise HTTPException(status_code=404, detail="Cities not found")
     return cities
+
+
+@app.get("/cities/{city_id}", response_model=CityRetrieveSchema)
+def retrieve_city(city_id: int, db: Session = Depends(get_db)):
+    city = get_city_by_id(db=db, city_id=city_id)
+    if not city:
+        raise HTTPException(status_code=404, detail="City not found")
+    return city

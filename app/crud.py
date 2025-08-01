@@ -25,3 +25,7 @@ def create_city(db: Session, city: CityCreateSchema) -> City:
 
 def get_all_cities(db: Session) -> Sequence[City]:
     return db.execute(select(City)).scalars().all()
+
+
+def get_city_by_id(db: Session, city_id: int) -> City | None:
+    return db.execute(select(City).where(City.id == city_id)).scalar_one_or_none()
