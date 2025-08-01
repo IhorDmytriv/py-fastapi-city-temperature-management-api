@@ -43,3 +43,8 @@ def update_city(db: Session, db_city: City, city_update: CityUpdateSchema):
     db.commit()
     db.refresh(db_city)
     return db_city
+
+
+def remove_city(db: Session, db_city: City) -> None:
+    db.delete(db_city)
+    db.commit()

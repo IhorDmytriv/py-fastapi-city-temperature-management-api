@@ -22,3 +22,7 @@ class CityRetrieveSchema(CityBaseSchema):
 
     class Config:
         from_attributes = True
+
+
+class MessageSchema(BaseModel):
+    message: str
