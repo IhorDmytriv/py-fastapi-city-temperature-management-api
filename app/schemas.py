@@ -1,6 +1,11 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
+
+
+class MessageSchema(BaseModel):
+    message: str
 
 
 class CityBaseSchema(BaseModel):
@@ -24,5 +29,18 @@ class CityRetrieveSchema(CityBaseSchema):
         from_attributes = True
 
 
-class MessageSchema(BaseModel):
-    message: str
+class TemperatureBaseSchema(BaseModel):
+    city_id: int
+    date_time: datetime
+    temperature: float
+
+
+class TemperatureCreateSchema(TemperatureBaseSchema):
+    pass
+
+
+class TemperatureRetrieveSchema(TemperatureBaseSchema):
+    id: int
+
+    class Config:
+        from_attributes = True
