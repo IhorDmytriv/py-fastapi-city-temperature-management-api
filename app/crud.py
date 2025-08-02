@@ -1,9 +1,9 @@
-from typing import List, Sequence
+from typing import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from db.models import City
+from db.models import City, Temperature
 from schemas import (
     CityCreateSchema,
     CityUpdateSchema
@@ -48,3 +48,7 @@ def update_city(db: Session, db_city: City, city_update: CityUpdateSchema):
 def remove_city(db: Session, db_city: City) -> None:
     db.delete(db_city)
     db.commit()
+
+
+def get_all_temperatures(db: Session) -> Sequence[Temperature]:
+    return db.execute(select(Temperature)).scalars().all()

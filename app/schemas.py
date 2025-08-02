@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel
 
@@ -22,11 +22,15 @@ class CityUpdateSchema(CityBaseSchema):
     additional_info: Optional[str] = None
 
 
-class CityRetrieveSchema(CityBaseSchema):
+class CityListSchema(CityBaseSchema):
     id: int
 
     class Config:
         from_attributes = True
+
+
+class CityRetrieveSchema(CityListSchema):
+    temperatures: List["TemperatureListSchema"]
 
 
 class TemperatureBaseSchema(BaseModel):
@@ -39,8 +43,12 @@ class TemperatureCreateSchema(TemperatureBaseSchema):
     pass
 
 
-class TemperatureRetrieveSchema(TemperatureBaseSchema):
+class TemperatureListSchema(TemperatureBaseSchema):
     id: int
 
     class Config:
         from_attributes = True
+
+
+class TemperatureRetrieveSchema(TemperatureListSchema):
+    city: CityListSchema

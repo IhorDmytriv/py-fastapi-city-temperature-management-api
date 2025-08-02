@@ -20,7 +20,7 @@ class City(Base):
     name: Mapped[str] = mapped_column(String(255))
     additional_info: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    temperatures: Mapped["Temperature"] = relationship("Temperature", back_populates="city")
+    temperatures: Mapped[list["Temperature"]] = relationship("Temperature", back_populates="city")
 
 
 class Temperature(Base):
