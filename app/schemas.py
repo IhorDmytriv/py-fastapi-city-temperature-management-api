@@ -48,3 +48,12 @@ class TemperatureListSchema(TemperatureBaseSchema):
 
     class Config:
         from_attributes = True
+
+
+class TemperatureRetrieveSchema(BaseModel):
+    date_time: datetime
+    temperature: float
+    city: CityBaseSchema
+
+    class Config:
+        from_attributes = True

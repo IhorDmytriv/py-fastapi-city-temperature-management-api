@@ -10,7 +10,9 @@ from app.crud import (
     get_city_by_id,
     update_city,
     remove_city,
-    get_all_temperatures, get_temperatures_by_city_id
+    get_all_temperatures,
+    get_temperatures_by_city_id,
+    create_temperatures
 )
 from app.db.database import get_db
 from app.schemas import (
@@ -19,7 +21,8 @@ from app.schemas import (
     CityListSchema,
     CityRetrieveSchema,
     CityUpdateSchema,
-    TemperatureListSchema
+    TemperatureListSchema,
+    TemperatureRetrieveSchema
 )
 
 app = FastAPI()
@@ -66,6 +69,19 @@ def delete_city(city_id: int, db: Session = Depends(get_db)):
 
     remove_city(db, db_city)
     return MessageSchema(message=f"City {db_city.name} was successfully removed!")
+
+
+@app.post("/temperatures/update/", response_model=List[TemperatureRetrieveSchema])
+async def add_temperatures(db: Session = Depends(get_db)):
+    db_cities = get_all_cities(db=db)
+    if not db_cities:
+        raise HTTPException(status_code=404, detail="No cities in database")
+
+    temperatures = await create_temperatures(db=db, cities=db_cities)
+    if not temperatures:
+        raise HTTPException(status_code=404, detail="No temperatures fetched")
+
+    return temperatures
 
 
 @app.get("/temperatures/", response_model=List[TemperatureListSchema])

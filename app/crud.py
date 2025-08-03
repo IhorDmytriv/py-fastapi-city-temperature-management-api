@@ -1,3 +1,5 @@
+import asyncio
+from datetime import datetime
 from typing import Sequence
 
 from sqlalchemy import select
@@ -8,6 +10,7 @@ from schemas import (
     CityCreateSchema,
     CityUpdateSchema
 )
+from scraper import scrape_temperature_by_city_name
 
 
 def check_city_by_name_in_db(db: Session, city_name: str) -> City | None:
@@ -48,6 +51,27 @@ def update_city(db: Session, db_city: City, city_update: CityUpdateSchema):
 def remove_city(db: Session, db_city: City) -> None:
     db.delete(db_city)
     db.commit()
+
+
+async def create_temperatures(db: Session, cities: Sequence[City]) -> Sequence[Temperature]:
+    tasks = [scrape_temperature_by_city_name(city.name) for city in cities]
+    temperatures_values = await asyncio.gather(*tasks)
+
+    db_temps = []
+    for city, temp in zip(cities, temperatures_values):
+        if temp is None:
+            continue
+        db_temps.append(
+            Temperature(
+                city_id=city.id,
+                date_time=datetime.now(),
+                temperature=temp
+            )
+        )
+
+    db.add_all(db_temps)
+    db.commit()
+    return db_temps
 
 
 def get_all_temperatures(db: Session) -> Sequence[Temperature]:
