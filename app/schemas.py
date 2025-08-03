@@ -48,7 +48,3 @@ class TemperatureListSchema(TemperatureBaseSchema):
 
     class Config:
         from_attributes = True
-
-
-class TemperatureRetrieveSchema(TemperatureListSchema):
-    city: CityListSchema

@@ -52,3 +52,7 @@ def remove_city(db: Session, db_city: City) -> None:
 
 def get_all_temperatures(db: Session) -> Sequence[Temperature]:
     return db.execute(select(Temperature)).scalars().all()
+
+
+def get_temperatures_by_city_id(db: Session, city_id: int) -> Sequence[Temperature]:
+    return db.execute(select(Temperature).where(Temperature.city_id == city_id)).scalars().all()

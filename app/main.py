@@ -10,7 +10,7 @@ from app.crud import (
     get_city_by_id,
     update_city,
     remove_city,
-    get_all_temperatures
+    get_all_temperatures, get_temperatures_by_city_id
 )
 from app.db.database import get_db
 from app.schemas import (
@@ -75,3 +75,13 @@ def list_temperatures(db: Session = Depends(get_db)):
     if not temperatures:
         raise HTTPException(status_code=404, detail="Temperatures not found")
     return temperatures
+
+
+@app.get("/temperatures/{city_id}", response_model=List[TemperatureListSchema])
+def retrieve_temperature(city_id: int, db: Session = Depends(get_db)):
+    city_temperatures = get_temperatures_by_city_id(db=db, city_id=city_id)
+
+    if not city_temperatures:
+        raise HTTPException(status_code=404, detail="Temperatures not found")
+
+    return city_temperatures
