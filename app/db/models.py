@@ -20,7 +20,12 @@ class City(Base):
     name: Mapped[str] = mapped_column(String(255))
     additional_info: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    temperatures: Mapped[list["Temperature"]] = relationship("Temperature", back_populates="city")
+    temperatures: Mapped[list["Temperature"]] = relationship(
+        "Temperature",
+        back_populates="city",
+        lazy="selectin",
+        cascade="all, delete-orphan"
+    )
 
 
 class Temperature(Base):
@@ -32,8 +37,15 @@ class Temperature(Base):
         autoincrement=True,
         index=True
     )
-    city_id: Mapped[int] = mapped_column(ForeignKey("cities.id"), nullable=False)
+    city_id: Mapped[int] = mapped_column(
+        ForeignKey("cities.id", ondelete="CASCADE"),
+        nullable=False
+    )
     date_time: Mapped[datetime] = mapped_column(DateTime)
     temperature: Mapped[float] = mapped_column(Float)
 
-    city: Mapped["City"] = relationship("City", back_populates="temperatures")
+    city: Mapped["City"] = relationship(
+        "City",
+        back_populates="temperatures",
+        lazy="joined"
+    )
