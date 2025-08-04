@@ -1,7 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, HTTPException
 
 from crud import (
     get_all_cities,
@@ -9,7 +8,7 @@ from crud import (
     get_all_temperatures,
     get_temperatures_by_city_id
 )
-from db.database import get_db
+from db.database import SessionDep
 from schemas import (
     TemperatureRetrieveSchema,
     TemperatureListSchema
@@ -19,7 +18,7 @@ router = APIRouter()
 
 
 @router.post("/temperatures/update/", response_model=List[TemperatureRetrieveSchema])
-async def add_temperatures(db: AsyncSession = Depends(get_db)):
+async def add_temperatures(db: SessionDep):
     db_cities = await get_all_cities(db=db)
     if not db_cities:
         raise HTTPException(status_code=404, detail="No cities in database")
@@ -32,7 +31,7 @@ async def add_temperatures(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/temperatures/", response_model=List[TemperatureListSchema])
-async def list_temperatures(db: AsyncSession = Depends(get_db)):
+async def list_temperatures(db: SessionDep):
     temperatures = await get_all_temperatures(db=db)
 
     if not temperatures:
@@ -41,7 +40,7 @@ async def list_temperatures(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/temperatures/{city_id}", response_model=List[TemperatureListSchema])
-async def retrieve_temperature(city_id: int, db: AsyncSession = Depends(get_db)):
+async def retrieve_temperature(city_id: int, db: SessionDep):
     city_temperatures = await get_temperatures_by_city_id(db=db, city_id=city_id)
 
     if not city_temperatures:
