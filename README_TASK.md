@@ -20,6 +20,26 @@ The project demonstrates the use of FastAPI, Async SQLAlchemy, and Alembic for b
 
 ---
 
+## 🎫 Design Choices
+
+* **Async SQLAlchemy (AsyncSession)** — Non-blocking DB operations for scalability
+
+* **APIRouter separation** — Clean project structure and modular endpoints
+
+* **Alembic migrations** — For database schema versioning
+
+---
+
+## 🔎 Assumptions & Simplifications
+
+* **SQLite** is used for simplicity; can be replaced with PostgreSQL for production
+
+* External API used: **OpenWeatherMap**
+
+* Temperatures are fetched in **Celsius** units
+
+---
+
 ## 🌐 Endpoints Overview
 
 ### Cities CRUD
